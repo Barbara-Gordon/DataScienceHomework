@@ -19,10 +19,10 @@ select country_id, country from country
 where country IN ('Afghanistan', 'Bangladesh', 'China');
 -- 3A
 alter table actor
-add desription BLOB;
+add column desription BLOB;
 -- 3B
 alter table actor 
-drop column description;
+drop column desription;
 -- 4A
 select actor.last_name, count(actor.last_name) as "Total"
 from actor
@@ -71,19 +71,17 @@ order by customer.last_name ASC;
 -- 7A
 select title from film
 where title like "k%" or "q%";
--- 7B
+-- 7B 
 select actor.first_name, actor.last_name
 from actor
 join film_actor on film_actor.actor_id = actor.actor_id
-join film on film.film_id = film_actor.film_id
-where film.title = "Alone Trip";
+where film_actor.film_id in (select film.film_id from film where film.title = "Alone Trip");
 -- 7C
 select customer.first_name, customer.last_name, customer.email
 from customer
 join address on address.address_id = customer.address_id
 join city on city.city_id = address.city_id
-join country on country.country_id = city.country_id
-where country.country = "Canada"
+where city.country_id IN (select country.country_id from country where country = "Canada")
 Group By customer.last_name;
 -- 7D
 select film.title
