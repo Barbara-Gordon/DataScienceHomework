@@ -86,9 +86,8 @@ Group By customer.last_name;
 -- 7D
 select film.title
 from film
-join film_category on film_category.film_id = film.film_id
-join category on category.category_id = film_category.category_id
-where category.name like "%family%";
+where film.film_id IN (select film_category.film_id from film_category where film_category.category_id in
+						(Select	category.category_id from category where category.name like "%family%"));
 -- 7E
 select film.title, count(rental.rental_id)
 from film
