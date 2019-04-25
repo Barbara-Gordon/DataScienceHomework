@@ -79,10 +79,11 @@ where film_actor.film_id in (select film.film_id from film where film.title = "A
 -- 7C
 select customer.first_name, customer.last_name, customer.email
 from customer
-join address on address.address_id = customer.address_id
-join city on city.city_id = address.city_id
-where city.country_id IN (select country.country_id from country where country = "Canada")
-Group By customer.last_name;
+where customer.address_id in 
+	(select address.address_id from address where address.city_id in
+		(select city.city_id from city where city.country_id in
+			(select country.country_id from country where country = "Canada")))
+Group by customer.last_name;
 -- 7D
 select film.title
 from film
